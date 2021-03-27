@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -20,13 +21,15 @@ namespace TestAppEvraz.Windows
     /// </summary>
     public partial class TransportWindow : Window
     {
-        public TransportWindow(string type)
+        public TransportWindow(string type, Config conf)
         {
             InitializeComponent();
             TransportType = type;
             AdditionalInfoChB.IsChecked = false;
+            config = conf;
         }
 
+        Config config;
         string TransportType;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -52,72 +55,94 @@ namespace TestAppEvraz.Windows
 
         private void OkBtn_Click(object sender, RoutedEventArgs e)
         {
-            bool Ok = false;
+           
             uint checkInt = 0;
-            if(Regex.Match(NameTB.Text, @"(\w|\d)").Success)
+            if(!Regex.Match(NameTB.Text, @"(\w|\d)").Success)
             {
-                Ok = true;
+                MessageBox.Show("Некорректно указано имя");
+                return;
             }
             else
             {
-                Ok = false;
-                MessageBox.Show("Некорректно указано имя");
-            }
-            if(uint.TryParse(SpeedTB.Text, out checkInt))
-            {
-                if (checkInt > 0)
+                if (config.TransportList.Any(t => t.Name == NameTB.Text))
                 {
-                    Ok = true;
+                    MessageBox.Show("Имя уже существует");
+                    return;
                 }
-                else
+            }
+            if(!uint.TryParse(SpeedTB.Text, out checkInt))
+            {
+                MessageBox.Show("Некорректно указана скорость");
+                return;     
+            }
+            else
+            {
+
+                if (checkInt <= 0)
                 {
                     MessageBox.Show("Скорость должна быть больше нуля");
-                }
-
+                    return;
+                }                
             }
-            else
+            if (!uint.TryParse(WheelPunctureTB.Text, out checkInt))
             {
-                Ok = false;
-                MessageBox.Show("Некорректно указана скорость");
-            }
-            if (uint.TryParse(WheelPunctureTB.Text, out checkInt))
-            {
-                Ok = true;
-            }
-            else
-            {
-                Ok = false;
                 MessageBox.Show("Некорректно указана вероятность прокола колеса");
+                return;
             }
+            
             if(TransportType == "Грузовик")
             {
-                if (uint.TryParse(AdditionalInfoTB.Text, out checkInt))
+                if (!uint.TryParse(AdditionalInfoTB.Text, out checkInt))
                 {
-                    Ok = true;
-                }
-                else
-                {
-                    Ok = false;
                     MessageBox.Show("Некорректно указан вес груза");
+                    return;
                 }
+                
             }
             else if (TransportType == "Легковая машина")
             {
-                if (uint.TryParse(AdditionalInfoTB.Text, out checkInt))
+                if (!uint.TryParse(AdditionalInfoTB.Text, out checkInt))
                 {
-                    Ok = true;
-                }
-                else
-                {
-                    Ok = false;
                     MessageBox.Show("Некорректно указано кол-во человек внутри");
-                }
+                    return;
+                }                
             }
             
-            if (Ok)
+
+          
+            if (TransportType == "Грузовик")
             {
-                this.Close();
+                var ch = double.Parse(SpeedTB.Text) - (config.Truck_CargoWeightKgSpeedConsuming * double.Parse(AdditionalInfoTB.Text));
+                if (double.Parse(SpeedTB.Text) - (config.Truck_CargoWeightKgSpeedConsuming * double.Parse(AdditionalInfoTB.Text)) <= 0)
+                {
+                    MessageBox.Show($"За один кг веса от скорости отнимается {config.Truck_CargoWeightKgSpeedConsuming} км/ч." +
+                     $"\n С нынешними показателями мы просто не поедем");
+                    return;
+                }
+                
             }
+            else if (TransportType == "Легковая машина")
+            {
+                var ch = double.Parse(SpeedTB.Text) - (config.Car_OneManSpeedConsuming * double.Parse(AdditionalInfoTB.Text));
+                if (double.Parse(SpeedTB.Text) - (config.Car_OneManSpeedConsuming * double.Parse(AdditionalInfoTB.Text)) <= 0)
+                {
+                    MessageBox.Show($"За одного человека в машине от скорости отнимается {config.Car_OneManSpeedConsuming} км/ч." +
+                    $"\n С нынешними показателями мы просто не поедем");
+                    return;
+                }               
+            }
+            else if (TransportType == "Мотоцикл")
+            {
+                if ((double.Parse(SpeedTB.Text) - config.Motorcycle_CarriageSpeedConsuming <= 0 && AdditionalInfoChB.IsChecked.Value) 
+                    || double.Parse(SpeedTB.Text) - config.Motorcycle_CarriageSpeedConsuming <= 0)
+                {
+                    MessageBox.Show($"Коляска отнимает от скорости {config.Motorcycle_CarriageSpeedConsuming} км/ч." +
+                     $"\n С нынешними показателями мы просто не поедем");
+                    return;
+                }
+                
+            }
+            this.Close();
         }
     }
 }

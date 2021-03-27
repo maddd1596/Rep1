@@ -22,6 +22,7 @@
         <Button x:Name="AddRowBtn" Content="Добавить" HorizontalAlignment="Left" Margin="10,0,0,22" Width="91" Click="AddRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
         <Button x:Name="RemoveRowBtn" Content="Удалить" HorizontalAlignment="Left" Margin="144,0,0,22" Width="91" Click="RemoveRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
         <Button x:Name="SaveRowBtn" Content="Сохранить" HorizontalAlignment="Left" Margin="276,0,0,22" Width="91" Click="SaveRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
+        <Button x:Name="StartCircleBtn" Content="Старт круга" HorizontalAlignment="Left" Margin="552,0,0,22" VerticalAlignment="Bottom" Width="82" Click="StartCircleBtn_Click"/>
 
     </Grid>
 </Window>

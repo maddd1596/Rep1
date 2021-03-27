@@ -9,10 +9,13 @@ using System.IO;
 
 namespace TestAppEvraz
 {
-    class Config
+    public class Config
     {
-        public int CircleLength;
-        public List<Transport> TransportList;
+        public int CircleLength = 100;
+        public List<Transport> TransportList = new List<Transport>();
+        public double Truck_CargoWeightKgSpeedConsuming = 0.05;
+        public double Car_OneManSpeedConsuming = 1;
+        public double Motorcycle_CarriageSpeedConsuming = 10;
     }
 
     

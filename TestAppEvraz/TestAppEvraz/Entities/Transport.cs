@@ -31,12 +31,12 @@ namespace TestAppEvraz.Entities
             set { transportType = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("transportType")); }
         }
         private string transportType { get; set; }
-        public uint Speed
+        public double Speed
         {
             get { return speed; }
             set { speed = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("speed")); }
         }
-        private uint speed { get; set; }
+        private double speed { get; set; }
         public int WheelPunctureProbabilityPercent { 
             get
             {

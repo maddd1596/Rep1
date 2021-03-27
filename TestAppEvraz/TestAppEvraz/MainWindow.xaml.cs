@@ -29,7 +29,7 @@ namespace TestAppEvraz
            
         }
 
-        
+        Config config = new Config();
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ConfigTable.ItemsSource = TransportList;
@@ -44,7 +44,7 @@ namespace TestAppEvraz
             switch(chosenType)
             {
                 case "Мотоцикл":
-                    TransportWindow mtw = new TransportWindow(chosenType);
+                    TransportWindow mtw = new TransportWindow(chosenType, config);
                     mtw.ShowDialog();
                     
                     TransportList.Add(new Motorcycle(TransportList.Count > 0 ? TransportList.Max(t => t.Id + 1) : 1)
@@ -56,9 +56,11 @@ namespace TestAppEvraz
                         HaveCarriage = mtw.AdditionalInfoChB.IsChecked.Value,
                         AdditionalInfo = mtw.AdditionalInfoChB.IsChecked.Value == true ? "С коляской" : "Без коляски"
                     });
+                    config.TransportList.Clear();
+                    config.TransportList.AddRange(TransportList);
                     break;
                 case "Грузовик":
-                    TransportWindow ttw = new TransportWindow(chosenType);
+                    TransportWindow ttw = new TransportWindow(chosenType, config);
                     ttw.ShowDialog();
 
                     TransportList.Add(new Truck(TransportList.Count > 0 ? TransportList.Max(t => t.Id + 1) : 1)
@@ -70,9 +72,11 @@ namespace TestAppEvraz
                         CargoWeight = int.Parse(ttw.AdditionalInfoTB.Text),
                         AdditionalInfo = "Вес груза: " + ttw.AdditionalInfoTB.Text + " кг"
                     });
+                    config.TransportList.Clear();
+                    config.TransportList.AddRange(TransportList);
                     break;
                 case "Легковая машина":
-                    TransportWindow ctw = new TransportWindow(chosenType);
+                    TransportWindow ctw = new TransportWindow(chosenType, config);
                     ctw.ShowDialog();
 
                     TransportList.Add(new Car(TransportList.Count > 0 ? TransportList.Max(t => t.Id + 1) : 1)
@@ -84,6 +88,8 @@ namespace TestAppEvraz
                         PeopleInsideCount = int.Parse(ctw.AdditionalInfoTB.Text),
                         AdditionalInfo = "Человек внутри: " + ctw.AdditionalInfoTB.Text
                     });
+                    config.TransportList.Clear();
+                    config.TransportList.AddRange(TransportList);
                     break;
                 default: break;
             }
@@ -100,11 +106,18 @@ namespace TestAppEvraz
                 if(TransportList.Any(t => t.Id == id))
                 {
                     TransportList.Remove(TransportList.First(t => t.Id == id));
+                    config.TransportList.Clear();
+                    config.TransportList.AddRange(TransportList);
                 }
             }
         }
 
         private void SaveRowBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void StartCircleBtn_Click(object sender, RoutedEventArgs e)
         {
 
         }
