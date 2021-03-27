@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,12 @@ namespace TestAppEvraz.Entities
     public abstract class Transport : INotifyPropertyChanged
     {
 
-            public Transport(int id)
-            {
-                Id = id;
-            }
-
+        public Transport(int id)
+        {
+            Id = id;
+        }
+                
+        public event PropertyChangedEventHandler PropertyChanged;
         public int Id {
             get { return id; }
             set { id = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("id")); }
@@ -61,7 +63,37 @@ namespace TestAppEvraz.Entities
         }
         private string additionalInfo { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public double ActualSpeed { get; set; }
+       
+        public void StartRace(Config config, ref RaceResultModel raceResult)
+        {
+            //int checkIntervalMs = (int)(((double)config.CircleLength) / ActualSpeed);
+            int checkIntervalMs = (int)(1000 / ActualSpeed);
+            //double coveredDistance = 0;
+            //RaceResultModel raceResult = new RaceResultModel();
+            raceResult.TransportName = this.Name;
+            Stopwatch raceTimer = new Stopwatch();
+            raceTimer.Restart();
+            bool wheelWasPunctured = false;
+            for(int i = 0; i < config.CircleLength; i++)
+            {
+                System.Threading.Thread.Sleep(checkIntervalMs);
+                raceResult.CoveredDistance = i + 1;
+                if (!wheelWasPunctured)
+                {
+                    if (new Random().Next(0, 100) <= WheelPunctureProbabilityPercent)
+                    {
+                        raceResult.State = "Прокол! Чиним...";
+                        System.Threading.Thread.Sleep(config.WheelPunctureTimeConsumingMs);
+                        wheelWasPunctured = true;
+                    }
+                }
+                raceResult.State = "В пути";
+            }
+            raceTimer.Stop();
+            raceResult.RaceTimeHours = ((double)raceTimer.ElapsedMilliseconds / 1000);
+            //return raceResult;
+        }
 
     }
 }

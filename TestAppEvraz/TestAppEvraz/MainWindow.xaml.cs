@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,6 +37,7 @@ namespace TestAppEvraz
             {
                 TransportList.Add(item);
             }
+            CircleLengthTB.Text = config.CircleLength.ToString();
         }
 
         Config config = new Config();
@@ -63,7 +65,8 @@ namespace TestAppEvraz
                         Speed = uint.Parse(mtw.SpeedTB.Text),
                         WheelPunctureProbabilityPercent = int.Parse(mtw.WheelPunctureTB.Text),
                         HaveCarriage = mtw.AdditionalInfoChB.IsChecked.Value,
-                        AdditionalInfo = mtw.AdditionalInfoChB.IsChecked.Value == true ? "С коляской" : "Без коляски"
+                        AdditionalInfo = mtw.AdditionalInfoChB.IsChecked.Value == true ? "С коляской" : "Без коляски",
+                        ActualSpeed = mtw.AdditionalInfoChB.IsChecked.Value ? double.Parse(mtw.SpeedTB.Text) - config.Motorcycle_CarriageSpeedConsuming : double.Parse(mtw.SpeedTB.Text)
                     });
                     config.TransportList.Clear();
                     config.TransportList.AddRange(TransportList);
@@ -79,7 +82,8 @@ namespace TestAppEvraz
                         Speed = uint.Parse(ttw.SpeedTB.Text),
                         WheelPunctureProbabilityPercent = int.Parse(ttw.WheelPunctureTB.Text),
                         CargoWeight = int.Parse(ttw.AdditionalInfoTB.Text),
-                        AdditionalInfo = "Вес груза: " + ttw.AdditionalInfoTB.Text + " кг"
+                        AdditionalInfo = "Вес груза: " + ttw.AdditionalInfoTB.Text + " кг",
+                        ActualSpeed = double.Parse(ttw.SpeedTB.Text) - uint.Parse(ttw.AdditionalInfoTB.Text) * config.Truck_CargoWeightKgSpeedConsuming
                     });
                     config.TransportList.Clear();
                     config.TransportList.AddRange(TransportList);
@@ -95,7 +99,8 @@ namespace TestAppEvraz
                         Speed = uint.Parse(ctw.SpeedTB.Text),
                         WheelPunctureProbabilityPercent = int.Parse(ctw.WheelPunctureTB.Text),
                         PeopleInsideCount = int.Parse(ctw.AdditionalInfoTB.Text),
-                        AdditionalInfo = "Человек внутри: " + ctw.AdditionalInfoTB.Text
+                        AdditionalInfo = "Человек внутри: " + ctw.AdditionalInfoTB.Text,
+                        ActualSpeed = double.Parse(ctw.SpeedTB.Text) - uint.Parse(ctw.AdditionalInfoTB.Text) * config.Car_OneManSpeedConsuming
                     });
                     config.TransportList.Clear();
                     config.TransportList.AddRange(TransportList);
@@ -123,12 +128,68 @@ namespace TestAppEvraz
 
         private void SaveRowsBtn_Click(object sender, RoutedEventArgs e)
         {
+            if(CircleLengthValid())
+            {
+                config.CircleLength = int.Parse(CircleLengthTB.Text);
+            }
             Config.SaveConfig(config);
         }
 
         private void StartCircleBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (CircleLengthValid())
+            {
+                config.CircleLength = int.Parse(CircleLengthTB.Text);
+
+                Task.Run(() =>
+                {
+                    ObservableCollection<RaceResultModel> raceResults = new ObservableCollection<RaceResultModel>();
+                    Dispatcher?.Invoke(() =>
+                    {
+                        AddRowBtn.IsEnabled = 
+                        RemoveRowBtn.IsEnabled = 
+                        SaveRowsBtn.IsEnabled = 
+                        StartCircleBtn.IsEnabled = 
+                        false;
+                        ResultTable.ItemsSource = null;
+                        ResultTable.Items.Clear();
+                        ResultTable.ItemsSource = raceResults;
+                        foreach(Transport item in TransportList)
+                        {
+                            raceResults.Add(new RaceResultModel() { Transport = item, TransportName = item.Name });
+                        }
+                    });
+
+                    
+                    
+                    Parallel.ForEach(raceResults, raceResult =>
+                    {
+                        raceResult.Transport.StartRace(config, ref raceResult);                        
+                    });
+
+                    Dispatcher?.Invoke(() =>
+                    {
+
+                        ResultTable.ItemsSource = raceResults;
+                        AddRowBtn.IsEnabled =
+                        RemoveRowBtn.IsEnabled =
+                        SaveRowsBtn.IsEnabled =
+                        StartCircleBtn.IsEnabled =
+                        true;
+                    });
+                });
+            }
         }
+
+        private bool CircleLengthValid()
+        {
+            if(Regex.Match(CircleLengthTB.Text, @"\D").Success)
+            {
+                MessageBox.Show("Некорректно указана длинна круга");
+                return false;
+            }
+            return true;
+        }
+
     }
 }

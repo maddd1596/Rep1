@@ -118,8 +118,7 @@ namespace TestAppEvraz.Windows
                     MessageBox.Show($"За один кг веса от скорости отнимается {config.Truck_CargoWeightKgSpeedConsuming} км/ч." +
                      $"\n С нынешними показателями мы просто не поедем");
                     return;
-                }
-                
+                }                
             }
             else if (TransportType == "Легковая машина")
             {

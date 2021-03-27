@@ -13,6 +13,7 @@ namespace TestAppEvraz
     {
         public int CircleLength = 100;
         public List<Transport> TransportList = new List<Transport>();
+        public int WheelPunctureTimeConsumingMs = 1000;
         public double Truck_CargoWeightKgSpeedConsuming = 0.05;
         public double Car_OneManSpeedConsuming = 1;
         public double Motorcycle_CarriageSpeedConsuming = 10;
