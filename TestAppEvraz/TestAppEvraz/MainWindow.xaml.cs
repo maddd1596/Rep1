@@ -31,6 +31,8 @@ namespace TestAppEvraz
             if(config == null)
             {
                 config = new Config();
+                //если конфига нет, то сохраним дефолтный
+                Config.SaveConfig(config);
             }
             TransportList.Clear();
             foreach(Transport item in config.TransportList)
