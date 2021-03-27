@@ -117,7 +117,7 @@ namespace TestAppEvraz
                 var transport = TransportList.First(t => t.Id == ((Transport)ConfigTable.SelectedItem).Id);
 
                 string chosenType = transport.TransportType;
-                TransportWindow tw = new TransportWindow(chosenType, config);
+                TransportWindow tw = new TransportWindow(chosenType, config, false);
                 tw.NameTB.Text = transport.Name;
                 tw.SpeedTB.Text = Math.Round(transport.Speed,0).ToString();                
                 tw.WheelPunctureTB.Text = transport.WheelPunctureProbabilityPercent.ToString();
@@ -185,7 +185,7 @@ namespace TestAppEvraz
             }
             Config.SaveConfig(config);
         }
-
+        ObservableCollection<RaceResultModel> raceResults = new ObservableCollection<RaceResultModel>();
         private void StartCircleBtn_Click(object sender, RoutedEventArgs e)
         {
             if (CircleLengthValid())
@@ -194,20 +194,24 @@ namespace TestAppEvraz
 
                 Task.Run(() =>
                 {
-                    ObservableCollection<RaceResultModel> raceResults = new ObservableCollection<RaceResultModel>();
+                    
                     Dispatcher?.Invoke(() =>
                     {
                         AddRowBtn.IsEnabled = 
                         RemoveRowBtn.IsEnabled = 
                         SaveRowsBtn.IsEnabled = 
                         StartCircleBtn.IsEnabled = 
+                        ChangeRowBtn.IsEnabled =
                         false;
                         ResultTable.ItemsSource = null;
                         ResultTable.Items.Clear();
                         ResultTable.ItemsSource = raceResults;
                         foreach(Transport item in TransportList)
                         {
-                            raceResults.Add(new RaceResultModel() { Transport = item, TransportName = item.Name });
+                            if (!raceResults.Any(rr => rr.Transport.Id == item.Id))
+                            {
+                                raceResults.Add(new RaceResultModel() { Transport = item, TransportName = item.Name });
+                            }
                         }
                     });
 
@@ -226,6 +230,7 @@ namespace TestAppEvraz
                         RemoveRowBtn.IsEnabled =
                         SaveRowsBtn.IsEnabled =
                         StartCircleBtn.IsEnabled =
+                        ChangeRowBtn.IsEnabled =
                         true;
                     });
                 });

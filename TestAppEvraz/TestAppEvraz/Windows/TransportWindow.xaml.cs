@@ -21,14 +21,15 @@ namespace TestAppEvraz.Windows
     /// </summary>
     public partial class TransportWindow : Window
     {
-        public TransportWindow(string type, Config conf)
+        public TransportWindow(string type, Config conf, bool isNew = true)
         {
             InitializeComponent();
             TransportType = type;
             AdditionalInfoChB.IsChecked = false;
             config = conf;
+            IsNew = isNew;
         }
-
+        bool IsNew;
         Config config;
         string TransportType;
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -64,7 +65,7 @@ namespace TestAppEvraz.Windows
             }
             else
             {
-                if (config.TransportList.Any(t => t.Name == NameTB.Text))
+                if (config.TransportList.Any(t => t.Name == NameTB.Text) && IsNew)
                 {
                     MessageBox.Show("Имя уже существует");
                     return;

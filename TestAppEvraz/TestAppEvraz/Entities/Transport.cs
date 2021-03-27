@@ -74,24 +74,28 @@ namespace TestAppEvraz.Entities
             raceResult.TransportName = this.Name;
             Stopwatch raceTimer = new Stopwatch();
             raceTimer.Restart();
-            bool wheelWasPunctured = false;
-            for(int i = 0; i < config.CircleLength; i++)
+            bool wheelWillBePunctured = false;
+            int wheelPunctureMoment = new Random().Next(0, config.CircleLength);
+            if (new Random().Next(0, 100) <= WheelPunctureProbabilityPercent)
+            {
+                wheelWillBePunctured = true;
+            }
+            for (int i = 0; i < config.CircleLength; i++)
             {
                 System.Threading.Thread.Sleep(checkIntervalMs);
-                raceResult.CoveredDistance = i + 1;
-                if (!wheelWasPunctured)
+                raceResult.CoveredDistance += 1;
+
+                if (wheelWillBePunctured && i == wheelPunctureMoment)
                 {
-                    if (new Random().Next(0, 100) <= WheelPunctureProbabilityPercent)
-                    {
-                        raceResult.State = "Прокол! Чиним...";
-                        System.Threading.Thread.Sleep(config.WheelPunctureTimeConsumingMs);
-                        wheelWasPunctured = true;
-                    }
+                    raceResult.State = "Прокол! Чиним...";
+                    System.Threading.Thread.Sleep(config.WheelPunctureTimeConsumingMs);
                 }
+                    
+                
                 raceResult.State = "В пути";
             }
             raceTimer.Stop();
-            raceResult.RaceTimeHours = ((double)raceTimer.ElapsedMilliseconds / 1000);
+            raceResult.RaceTimeHours += ((double)raceTimer.ElapsedMilliseconds / 1000);
             //return raceResult;
         }
 
