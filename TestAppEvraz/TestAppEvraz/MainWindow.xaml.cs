@@ -47,11 +47,14 @@ namespace TestAppEvraz
         }
 
         public ObservableCollection<Transport> TransportList = new ObservableCollection<Transport>();
+        //Добавляем новый транспорт
         private void AddRowBtn_Click(object sender, RoutedEventArgs e)
         {
+           
             ChooseTransportTypeWindow window = new ChooseTransportTypeWindow();
             window.ShowDialog();            
             string chosenType = window.ChosenType;
+            //Окно примет вид, соответствующий выбранному типу транспорта
             switch(chosenType)
             {
                 case "Мотоцикл":
@@ -107,9 +110,16 @@ namespace TestAppEvraz
                     break;
                 default: break;
             }
-            //ConfigTable.ItemsSource = TransportList;
             
         }
+        private void ClearRaceResults()
+        {
+            raceResults.Clear();
+            ResultTable.ItemsSource = null;
+            ResultTable.Items.Clear();
+
+        }
+        //Меняем данные транспорта
         private void ChangeRowBtn_Click(object sender, RoutedEventArgs e)
         {
             if (ConfigTable.SelectedItem != null)
@@ -117,6 +127,7 @@ namespace TestAppEvraz
                 var transport = TransportList.First(t => t.Id == ((Transport)ConfigTable.SelectedItem).Id);
 
                 string chosenType = transport.TransportType;
+                //Открываем окно с данными и вносим данные о выбранном транспорте
                 TransportWindow tw = new TransportWindow(chosenType, config, false);
                 tw.NameTB.Text = transport.Name;
                 tw.SpeedTB.Text = Math.Round(transport.Speed,0).ToString();                
@@ -134,7 +145,7 @@ namespace TestAppEvraz
                     tw.AdditionalInfoTB.Text = ((Car)transport).PeopleInsideCount.ToString();
                 }
                 tw.ShowDialog();
-
+                
                 transport.Name = tw.NameTB.Text;
                 transport.TransportType = chosenType;
                 transport.Speed = uint.Parse(tw.SpeedTB.Text);
@@ -162,6 +173,7 @@ namespace TestAppEvraz
                 config.TransportList.AddRange(TransportList);
             }
         }
+        //Удаляем транспорт
         private void RemoveRowBtn_Click(object sender, RoutedEventArgs e)
         {
             if(ConfigTable.SelectedItem != null)
@@ -177,6 +189,7 @@ namespace TestAppEvraz
             }
         }
 
+        //Сохраняем конфиг (транспорт и длину круга)
         private void SaveRowsBtn_Click(object sender, RoutedEventArgs e)
         {
             if(CircleLengthValid())
@@ -186,6 +199,7 @@ namespace TestAppEvraz
             Config.SaveConfig(config);
         }
         ObservableCollection<RaceResultModel> raceResults = new ObservableCollection<RaceResultModel>();
+        //Начало круга для всех
         private void StartCircleBtn_Click(object sender, RoutedEventArgs e)
         {
             if (CircleLengthValid())
@@ -194,7 +208,7 @@ namespace TestAppEvraz
 
                 Task.Run(() =>
                 {
-                    
+                    //Выключаем кнопки на время гонки
                     Dispatcher?.Invoke(() =>
                     {
                         AddRowBtn.IsEnabled = 
@@ -202,9 +216,8 @@ namespace TestAppEvraz
                         SaveRowsBtn.IsEnabled = 
                         StartCircleBtn.IsEnabled = 
                         ChangeRowBtn.IsEnabled =
+                        ClearResultsBtn.IsEnabled =
                         false;
-                        ResultTable.ItemsSource = null;
-                        ResultTable.Items.Clear();
                         ResultTable.ItemsSource = raceResults;
                         foreach(Transport item in TransportList)
                         {
@@ -221,7 +234,7 @@ namespace TestAppEvraz
                     {
                         raceResult.Transport.StartRace(config, ref raceResult);                        
                     });
-
+                    //Включаем кнопки по окончании гонки
                     Dispatcher?.Invoke(() =>
                     {
                         
@@ -231,12 +244,14 @@ namespace TestAppEvraz
                         SaveRowsBtn.IsEnabled =
                         StartCircleBtn.IsEnabled =
                         ChangeRowBtn.IsEnabled =
+                        ClearResultsBtn.IsEnabled =
                         true;
                     });
                 });
             }
         }
 
+        //Проверяем верно ли указана длина круга
         private bool CircleLengthValid()
         {
             if(Regex.Match(CircleLengthTB.Text, @"\D").Success)
@@ -246,7 +261,10 @@ namespace TestAppEvraz
             }
             return true;
         }
-
-        
+        //Чистим результаты
+        private void ClearResultsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ClearRaceResults();
+        }
     }
 }

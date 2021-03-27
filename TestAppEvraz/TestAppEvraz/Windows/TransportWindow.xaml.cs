@@ -34,6 +34,7 @@ namespace TestAppEvraz.Windows
         string TransportType;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //Отображаем только нужные контролы
             switch(TransportType)
             {
                 case "Мотоцикл": AdditionalInfoChB.Visibility = Visibility.Visible; 
@@ -56,7 +57,7 @@ namespace TestAppEvraz.Windows
 
         private void OkBtn_Click(object sender, RoutedEventArgs e)
         {
-           
+            //Проверяем всё ли в порядке с данными
             uint checkInt = 0;
             if(!Regex.Match(NameTB.Text, @"(\w|\d)").Success)
             {
@@ -110,7 +111,7 @@ namespace TestAppEvraz.Windows
             }
             
 
-          
+            //В этом блоке удостоверимся, что коляска, вес или люди в салоне не снизят скорось транспорта до нуля
             if (TransportType == "Грузовик")
             {
                 var ch = double.Parse(SpeedTB.Text) - (config.Truck_CargoWeightKgSpeedConsuming * double.Parse(AdditionalInfoTB.Text));

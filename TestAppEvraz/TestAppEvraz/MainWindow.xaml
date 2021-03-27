@@ -29,10 +29,11 @@
         <Button x:Name="AddRowBtn" Content="Добавить" HorizontalAlignment="Left" Margin="10,0,0,22" Width="85" Click="AddRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
         <Button x:Name="RemoveRowBtn" Content="Удалить" HorizontalAlignment="Left" Margin="100,0,0,22" Width="85" Click="RemoveRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
         <Button x:Name="SaveRowsBtn" Content="Сохранить" HorizontalAlignment="Left" Margin="279,0,0,22" Width="85" Click="SaveRowsBtn_Click" Height="19" VerticalAlignment="Bottom"/>
-        <Button x:Name="StartCircleBtn" Content="Старт круга" HorizontalAlignment="Left" Margin="552,0,0,22" VerticalAlignment="Bottom" Width="82" Click="StartCircleBtn_Click"/>
+        <Button x:Name="StartCircleBtn" Content="Старт круга" HorizontalAlignment="Left" Margin="484,0,0,22" VerticalAlignment="Bottom" Width="82" Click="StartCircleBtn_Click"/>
         <TextBox x:Name="CircleLengthTB" HorizontalAlignment="Left" Height="23" Margin="95,9,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Длина круга:" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top"/>
         <Button x:Name="ChangeRowBtn" Content="Изменить" HorizontalAlignment="Left" Margin="190,0,0,22" Width="85" Click="ChangeRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
+        <Button x:Name="ClearResultsBtn" Content="Очистить результаты" HorizontalAlignment="Left" Margin="577,0,0,22" VerticalAlignment="Bottom" Width="127" Click="ClearResultsBtn_Click"/>
 
     </Grid>
 </Window>

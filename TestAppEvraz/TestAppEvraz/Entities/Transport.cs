@@ -64,13 +64,13 @@ namespace TestAppEvraz.Entities
         private string additionalInfo { get; set; }
 
         public double ActualSpeed { get; set; }
-       
+
+        //Начинаем движение
         public void StartRace(Config config, ref RaceResultModel raceResult)
         {
-            //int checkIntervalMs = (int)(((double)config.CircleLength) / ActualSpeed);
+            
+            //В данном случае 1 час равен одной секунде реального времени
             int checkIntervalMs = (int)(1000 / ActualSpeed);
-            //double coveredDistance = 0;
-            //RaceResultModel raceResult = new RaceResultModel();
             raceResult.TransportName = this.Name;
             Stopwatch raceTimer = new Stopwatch();
             raceTimer.Restart();
@@ -96,7 +96,6 @@ namespace TestAppEvraz.Entities
             }
             raceTimer.Stop();
             raceResult.RaceTimeHours += ((double)raceTimer.ElapsedMilliseconds / 1000);
-            //return raceResult;
         }
 
     }
