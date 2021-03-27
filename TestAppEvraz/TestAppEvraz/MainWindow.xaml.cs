@@ -26,7 +26,16 @@ namespace TestAppEvraz
         public MainWindow()
         {
             InitializeComponent();
-           
+            config = Config.LoadConfig();
+            if(config == null)
+            {
+                config = new Config();
+            }
+            TransportList.Clear();
+            foreach(Transport item in config.TransportList)
+            {
+                TransportList.Add(item);
+            }
         }
 
         Config config = new Config();
@@ -112,14 +121,14 @@ namespace TestAppEvraz
             }
         }
 
-        private void SaveRowBtn_Click(object sender, RoutedEventArgs e)
+        private void SaveRowsBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            Config.SaveConfig(config);
         }
 
         private void StartCircleBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
     }
 }

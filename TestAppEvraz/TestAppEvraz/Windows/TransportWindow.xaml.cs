@@ -133,8 +133,7 @@ namespace TestAppEvraz.Windows
             }
             else if (TransportType == "Мотоцикл")
             {
-                if ((double.Parse(SpeedTB.Text) - config.Motorcycle_CarriageSpeedConsuming <= 0 && AdditionalInfoChB.IsChecked.Value) 
-                    || double.Parse(SpeedTB.Text) - config.Motorcycle_CarriageSpeedConsuming <= 0)
+                if (double.Parse(SpeedTB.Text) - config.Motorcycle_CarriageSpeedConsuming <= 0 && AdditionalInfoChB.IsChecked.Value)                     
                 {
                     MessageBox.Show($"Коляска отнимает от скорости {config.Motorcycle_CarriageSpeedConsuming} км/ч." +
                      $"\n С нынешними показателями мы просто не поедем");
