@@ -1,0 +1,26 @@
+﻿<Window x:Class="TestAppEvraz.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestAppEvraz"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Grid>
+        <DataGrid HorizontalAlignment="Left" Margin="10,10,0,32" Width="311" Name="ConfigTable" AutoGenerateColumns="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Width="Auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="Тип транспорта" Width="Auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="Имя" Width="Auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="Скорость" Width="Auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="Вероятность прокола %" Width="Auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="Доп. поле" Width="Auto"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid Margin="394,10,9.6,32" Name="ResultTable"/>
+        <Button x:Name="AddRowBtn" Content="Добавить" HorizontalAlignment="Left" Margin="10,393,0,0" VerticalAlignment="Top" Width="91" Click="AddRowBtn_Click"/>
+        <Button x:Name="RemoveRowBtn" Content="Удалить" HorizontalAlignment="Left" Margin="120,393,0,0" VerticalAlignment="Top" Width="91" Click="RemoveRowBtn_Click"/>
+        <Button x:Name="SaveRowBtn" Content="Сохранить" HorizontalAlignment="Left" Margin="230,393,0,0" VerticalAlignment="Top" Width="91" Click="SaveRowBtn_Click"/>
+
+    </Grid>
+</Window>
