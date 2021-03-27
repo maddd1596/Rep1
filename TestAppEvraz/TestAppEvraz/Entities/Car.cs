@@ -8,6 +8,11 @@ namespace TestAppEvraz.Entities
 {
     class Car : Transport
     {
+
+        public Car(int id) : base(id)
+        {
+
+        }
         public int PeopleInsideCount { 
             get
             {

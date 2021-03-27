@@ -7,20 +7,21 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
-        <DataGrid HorizontalAlignment="Left" Margin="10,10,0,32" Width="311" Name="ConfigTable" AutoGenerateColumns="True">
+        <DataGrid HorizontalAlignment="Left" Margin="10,10,0,46" Width="357" Name="ConfigTable" AutoGenerateColumns="False" IsReadOnly="True"
+                  HorizontalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Width="Auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Тип транспорта" Width="Auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Имя" Width="Auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Скорость" Width="Auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Вероятность прокола %" Width="Auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Доп. поле" Width="Auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="Id" Width="Auto" Binding="{Binding Id}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Тип транспорта" Width="Auto" Binding="{Binding TransportType}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Имя" Width="Auto" Binding="{Binding Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Скорость" Width="Auto" Binding="{Binding Speed}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Вероятность прокола %" Width="Auto" Binding="{Binding WheelPunctureProbabilityPercent}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Доп. поле" Width="Auto" Binding="{Binding AdditionalInfo}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid Margin="394,10,9.6,32" Name="ResultTable"/>
-        <Button x:Name="AddRowBtn" Content="Добавить" HorizontalAlignment="Left" Margin="10,393,0,0" VerticalAlignment="Top" Width="91" Click="AddRowBtn_Click"/>
-        <Button x:Name="RemoveRowBtn" Content="Удалить" HorizontalAlignment="Left" Margin="120,393,0,0" VerticalAlignment="Top" Width="91" Click="RemoveRowBtn_Click"/>
-        <Button x:Name="SaveRowBtn" Content="Сохранить" HorizontalAlignment="Left" Margin="230,393,0,0" VerticalAlignment="Top" Width="91" Click="SaveRowBtn_Click"/>
+        <DataGrid Margin="394,10,9.6,46" Name="ResultTable" HorizontalScrollBarVisibility="Auto"/>
+        <Button x:Name="AddRowBtn" Content="Добавить" HorizontalAlignment="Left" Margin="10,0,0,22" Width="91" Click="AddRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
+        <Button x:Name="RemoveRowBtn" Content="Удалить" HorizontalAlignment="Left" Margin="144,0,0,22" Width="91" Click="RemoveRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
+        <Button x:Name="SaveRowBtn" Content="Сохранить" HorizontalAlignment="Left" Margin="276,0,0,22" Width="91" Click="SaveRowBtn_Click" Height="19" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

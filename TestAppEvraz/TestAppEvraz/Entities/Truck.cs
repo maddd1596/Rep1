@@ -8,6 +8,11 @@ namespace TestAppEvraz.Entities
 {
     class Truck : Transport
     {
+        public Truck(int id) : base(id)
+        {
+
+        }
+
         public double CargoWeight
         {
             get

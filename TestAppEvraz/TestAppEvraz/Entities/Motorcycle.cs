@@ -8,6 +8,10 @@ namespace TestAppEvraz.Entities
 {
     class Motorcycle : Transport
     {
+        public Motorcycle(int id) : base(id)
+        {
+
+        }
         public bool HaveCarriage { get; set; }
     }
 }
