@@ -110,7 +110,58 @@ namespace TestAppEvraz
             //ConfigTable.ItemsSource = TransportList;
             
         }
+        private void ChangeRowBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ConfigTable.SelectedItem != null)
+            {
+                var transport = TransportList.First(t => t.Id == ((Transport)ConfigTable.SelectedItem).Id);
 
+                string chosenType = transport.TransportType;
+                TransportWindow tw = new TransportWindow(chosenType, config);
+                tw.NameTB.Text = transport.Name;
+                tw.SpeedTB.Text = Math.Round(transport.Speed,0).ToString();                
+                tw.WheelPunctureTB.Text = transport.WheelPunctureProbabilityPercent.ToString();
+                if(transport.GetType() == typeof(Motorcycle))
+                {
+                    tw.AdditionalInfoChB.IsChecked = ((Motorcycle)transport).HaveCarriage;
+                }
+                else if (transport.GetType() == typeof(Truck))
+                {
+                    tw.AdditionalInfoTB.Text = ((Truck)transport).CargoWeight.ToString();
+                }
+                else if (transport.GetType() == typeof(Car))
+                {
+                    tw.AdditionalInfoTB.Text = ((Car)transport).PeopleInsideCount.ToString();
+                }
+                tw.ShowDialog();
+
+                transport.Name = tw.NameTB.Text;
+                transport.TransportType = chosenType;
+                transport.Speed = uint.Parse(tw.SpeedTB.Text);
+                transport.WheelPunctureProbabilityPercent = int.Parse(tw.WheelPunctureTB.Text);
+                switch (chosenType)
+                {
+                    case "Мотоцикл":
+                       ((Motorcycle)transport).HaveCarriage = tw.AdditionalInfoChB.IsChecked.Value;
+                        transport.AdditionalInfo = tw.AdditionalInfoChB.IsChecked.Value == true ? "С коляской" : "Без коляски";
+                        transport.ActualSpeed = tw.AdditionalInfoChB.IsChecked.Value ? double.Parse(tw.SpeedTB.Text) - config.Motorcycle_CarriageSpeedConsuming
+                                : double.Parse(tw.SpeedTB.Text);
+                        break;
+                    case "Грузовик":
+                        ((Truck)transport).CargoWeight = int.Parse(tw.AdditionalInfoTB.Text);
+                        transport.AdditionalInfo = "Вес груза: " + tw.AdditionalInfoTB.Text + " кг";
+                        transport.ActualSpeed = double.Parse(tw.SpeedTB.Text) - uint.Parse(tw.AdditionalInfoTB.Text) * config.Truck_CargoWeightKgSpeedConsuming;
+                        break;
+                    case "Легковая машина":
+                        ((Car)transport).PeopleInsideCount = int.Parse(tw.AdditionalInfoTB.Text);
+                        transport.AdditionalInfo = "Человек внутри: " + tw.AdditionalInfoTB.Text;
+                        transport.ActualSpeed = double.Parse(tw.SpeedTB.Text) - uint.Parse(tw.AdditionalInfoTB.Text) * config.Car_OneManSpeedConsuming;
+                        break;
+                }
+                config.TransportList.Clear();
+                config.TransportList.AddRange(TransportList);
+            }
+        }
         private void RemoveRowBtn_Click(object sender, RoutedEventArgs e)
         {
             if(ConfigTable.SelectedItem != null)
@@ -169,8 +220,8 @@ namespace TestAppEvraz
 
                     Dispatcher?.Invoke(() =>
                     {
-
-                        ResultTable.ItemsSource = raceResults;
+                        
+                        ResultTable.ItemsSource = raceResults.OrderBy(rr => rr.RaceTimeHours);
                         AddRowBtn.IsEnabled =
                         RemoveRowBtn.IsEnabled =
                         SaveRowsBtn.IsEnabled =
@@ -191,5 +242,6 @@ namespace TestAppEvraz
             return true;
         }
 
+        
     }
 }
